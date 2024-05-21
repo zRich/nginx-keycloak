@@ -1,20 +1,20 @@
 services:
     nginx:
-        build: .
-        image: ghcr.io/richzhao/nginx-keycloak/nginx-sso:20240519
+        image: stable-diffusion-sso:latest
         # Following command auto-replaces env variables in NGINX configuration
-        command: /bin/bash -c "envsubst < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf && /usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'" 
+        command: /bin/bash -c "envsubst < /etc/nginx/access_by_lua.template > /etc/nginx/access_by_lua && /usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'"
         ports:
             - 3002:3002
-        volumes: 
+        volumes:
             - ./logs:/var/log/nginx
-            - ./nginx-roles.conf.template:/etc/nginx/conf.d/nginx.conf.template
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf
         environment:
             KEYCLOAK_INTERNAL_ENDPOINT: ${KEYCLOAK_INTERNAL_ENDPOINT}
             KEYCLOAK_EXTERNAL_ENDPOINT: ${KEYCLOAK_EXTERNAL_ENDPOINT}
             KEYCLOAK_LOGOUT_REDIRECT_URI: ${KEYCLOAK_LOGOUT_REDIRECT_URI}
             KEYCLOAK_REALM: ${KEYCLOAK_REALM}
             KEYCLOAK_CLIENT: ${KEYCLOAK_CLIENT}
+            KEYCLOAK_CLIENT_ROLE: ${KEYCLOAK_CLIENT_ROLE}
             KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}
 
     postgres:

@@ -6,6 +6,13 @@ Setting NGINX as a reverse proxy with Keycloak SSO in front of your web applicat
 
 ## Getting started
 
+### Build SSO image
+
+```bash
+cd docker
+docker build -t stable-diffusion-sso:latest .
+```
+
 ### Configuring Keycloak
 
 1. Set-up `.env` and edit variable values
@@ -92,6 +99,7 @@ sudo apt install certbot python3-certbot-nginx
 
 - [How To Secure Nginx with Let's Encrypt on Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-22-04)
 - [Mastodon with docker rootless, compose, and nginx reverse proxy](https://du.nkel.dev/blog/2023-12-12_mastodon-docker-rootless/)
+- [SWAG](https://docs.linuxserver.io/general/swag/#nextcloud-subdomain-reverse-proxy-example)
   
 ## Credits
 
