@@ -20,7 +20,7 @@ services:
     postgres:
         image: postgres:16.3
         volumes:
-            - ./postgres_data:/var/lib/postgresql/data
+            - postgres_data:/var/lib/postgresql/data
         environment: 
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
@@ -29,6 +29,9 @@ services:
     keycloak:
         image: quay.io/keycloak/keycloak:24.0.4
         environment:
+            KC_HOSTNAME: ${KC_HOSTNAME}
+            KC_HTTP_ENABLED: true
+            KC_HOSTNAME_STRICT_HTTPS: false        
             DB_VENDOR: POSTGRES
             DB_ADDR: postgres
             DB_DATABASE: ${POSTGRES_DB}
@@ -38,7 +41,7 @@ services:
             KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
             KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
             KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_EXTERNAL_ENDPOINT}/auth
-        command: start-dev
+        command: start --verbose --optimized
         ports:
             - 8080:8080
         depends_on:
@@ -46,3 +49,6 @@ services:
     
     stable-diffusion:
         image: nginx:1.25.5
+
+volumes:
+    postgres_data:
