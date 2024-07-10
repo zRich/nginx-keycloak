@@ -53,7 +53,7 @@ end
 local access_token, err = require("resty.openidc").access_token(opts, session)
 local parsed_token, token_err = require("resty.openidc").jwt_verify(res.access_token, opts)
 
-if	(parsed_token.resource_access == nil or parsed_token.resource_access.${KEYCLOAK_CLIENT} == nil) then
+if (parsed_token.resource_access == nil or parsed_token.resource_access.${KEYCLOAK_CLIENT} == nil) then
     ngx.status = 403
     ngx.log(ngx.NOTICE, res.id_token.preferred_username .. " - User has no role, therefore access was denied")
     ngx.exit(ngx.HTTP_FORBIDDEN)
@@ -68,7 +68,7 @@ end
 
 client_role = "${KEYCLOAK_CLIENT_ROLE}"
 
-if not contains(client_roles, "NginxApps-App1") then
+if not contains(client_roles, client_role) then
     ngx.status = 403
     ngx.log(ngx.NOTICE, res.id_token.preferred_username .. " - User got an access denied")
     ngx.exit(ngx.HTTP_FORBIDDEN)
