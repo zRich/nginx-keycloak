@@ -27,28 +27,33 @@ services:
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             
     keycloak:
-        image: quay.io/keycloak/keycloak:24.0.4
+        image: quay.io/keycloak/keycloak:25.0.1
         environment:
             KC_HOSTNAME: ${KC_HOSTNAME}
             KC_HTTP_ENABLED: true
             KC_HOSTNAME_STRICT_HTTPS: false        
-            DB_VENDOR: POSTGRES
-            DB_ADDR: postgres
+            KC_DB: postgres
+            KC_DB_URL_HOST: postgres
+            KC_DB_URL_PORT: 5432
+            KC_DB_URL_DATABASE: ${POSTGRES_DB}
             DB_DATABASE: ${POSTGRES_DB}
-            DB_USER: ${POSTGRES_USER}
-            DB_SCHEMA: public
-            DB_PASSWORD: ${POSTGRES_PASSWORD}
-            KEYCLOAK_ADMIN: ${KC_USER}
-            KEYCLOAK_ADMIN_PASSWORD: ${KC_PASSWORD}
+            KC_DB_USERNAME: ${POSTGRES_USER}
+            KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+            KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+            KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
             KEYCLOAK_FRONTEND_URL: ${KC_EXTERNAL_ENDPOINT}/auth
-        command: start --verbose --optimized
+        command: start --verbose
         ports:
             - 8080:8080
         depends_on:
             - postgres
     
-    stable-diffusion:
-        image: nginx:1.25.5
+    # stable-diffusion:
+    #     image: nginx:1.25.5
+    #     ports:
+    #       - 80:80
+    #     volumes:
+    #       - ./nginx.conf:/etc/nginx/conf.d/default.conf
 
 volumes:
     postgres_data:

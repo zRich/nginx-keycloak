@@ -50,7 +50,7 @@ if err then
     ngx.exit(ngx.HTTP_FORBIDDEN)
 end
 
-local access_token, err = require("resty.openidc").access_token(opts, session)
+-- local access_token, err = require("resty.openidc").access_token(opts, session)
 local parsed_token, token_err = require("resty.openidc").jwt_verify(res.access_token, opts)
 
 if (parsed_token.resource_access == nil or parsed_token.resource_access.${KEYCLOAK_CLIENT} == nil) then
@@ -58,6 +58,10 @@ if (parsed_token.resource_access == nil or parsed_token.resource_access.${KEYCLO
     ngx.log(ngx.NOTICE, res.id_token.preferred_username .. " - User has no role, therefore access was denied")
     ngx.exit(ngx.HTTP_FORBIDDEN)
 end
+
+-- ngx.header['access_token'] = access_token
+ngx.header['KC-username'] = res.id_token.preferred_username
+-- ngx.req.set_header('username', res.id_token.preferred_username)
 
 client_roles = parsed_token.resource_access.${KEYCLOAK_CLIENT}.roles
 if	(client_roles == nil) then
