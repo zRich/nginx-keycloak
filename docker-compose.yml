@@ -1,13 +1,14 @@
 services:
     nginx:
         image: stable-diffusion-sso:latest
-        # Following command auto-replaces env variables in NGINX configuration
-        command: /bin/bash -c "envsubst < /etc/nginx/access_by_lua.template > /etc/nginx/access_by_lua && /usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'"
+        command: /usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'
         ports:
-            - 3002:3002
+            - 80:80
         volumes:
             - ./logs:/var/log/nginx
+            - ./access_by_lua:/etc/nginx/access_by_lua
             - ./nginx.conf:/etc/nginx/conf.d/default.conf
+            - ./dashboard:/opt/nginx/html/dashboard
         environment:
             KEYCLOAK_INTERNAL_ENDPOINT: ${KC_INTERNAL_ENDPOINT}
             KEYCLOAK_EXTERNAL_ENDPOINT: ${KC_EXTERNAL_ENDPOINT}
@@ -47,13 +48,6 @@ services:
             - 8080:8080
         depends_on:
             - postgres
-    
-    # stable-diffusion:
-    #     image: nginx:1.25.5
-    #     ports:
-    #       - 80:80
-    #     volumes:
-    #       - ./nginx.conf:/etc/nginx/conf.d/default.conf
 
 volumes:
     postgres_data:
