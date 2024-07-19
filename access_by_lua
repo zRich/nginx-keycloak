@@ -87,3 +87,5 @@ if not contains(parsed_token.resource_access[KEYCLOAK_CLIENT].roles, KEYCLOAK_CL
     ngx.log(ngx.NOTICE, res.id_token.preferred_username .. " - User got an access denied")
     ngx.exit(ngx.HTTP_FORBIDDEN)
 end
+
+ngx.req.set_header("X-USER", res.id_token.preferred_username)
