@@ -57,7 +57,7 @@ local opts = {
     redirect_after_logout_uri = string.format("%s/realms/%s/protocol/openid-connect/logout?redirect_uri=%s",KEYCLOAK_EXTERNAL_ENDPOINT,KEYCLOAK_REALM,KEYCLOAK_LOGOUT_REDIRECT_URI),
     redirect_after_logout_with_id_token_hint = false,
     scope = "openid",
-    session_contents = {id_token=true, access_token=true, user=true},
+    session_contents = {id_token=true, access_token=true},
 }
 
 local res, err, target_url, session = require("resty.openidc").authenticate(opts)
@@ -88,4 +88,5 @@ if not contains(parsed_token.resource_access[KEYCLOAK_CLIENT].roles, KEYCLOAK_CL
     ngx.exit(ngx.HTTP_FORBIDDEN)
 end
 
-ngx.req.set_header("X-USER", res.id_token.preferred_username)
+local cjson = require("cjson")
+ngx.req.set_header("X-USER", cjson.encode(res))
