@@ -20,7 +20,8 @@ end
 
 local KEYCLOAK_INTERNAL_ENDPOINT="http://192.168.50.190:8080"
 local KEYCLOAK_EXTERNAL_ENDPOINT="http://192.168.50.190:8080"
-local KEYCLOAK_LOGOUT_REDIRECT_URI="http://192.168.50.190:3002"
+-- local KEYCLOAK_LOGOUT_REDIRECT_URI="http://comfyui.szqrinfo.com"
+local KEYCLOAK_LOGOUT_REDIRECT_URI="https://www.bilibili.com/"
 local KEYCLOAK_REALM="React"
 local KEYCLOAK_CLIENT="React"
 local KEYCLOAK_CLIENT_ROLE="ReactRole"
@@ -32,29 +33,23 @@ local opts = {
     renew_access_token_on_expiry = true,
     discovery = { 
         issuer = string.format("%s/realms/%s",KEYCLOAK_EXTERNAL_ENDPOINT,KEYCLOAK_REALM),
-        -- authorization_endpoint = "${KEYCLOAK_EXTERNAL_ENDPOINT}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/auth",
         authorization_endpoint = string.format("%s/realms/%s/protocol/openid-connect/auth",KEYCLOAK_EXTERNAL_ENDPOINT,KEYCLOAK_REALM),
         id_token_signing_alg_values_supported = { "RS256", "RS384", "RS512" },
         token_signing_alg_values_expected = { "RS256", "RS384", "RS512" },
-        -- token_endpoint = "${KEYCLOAK_INTERNAL_ENDPOINT}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/token",
         token_endpoint = string.format("%s/realms/%s/protocol/openid-connect/token",KEYCLOAK_INTERNAL_ENDPOINT,KEYCLOAK_REALM),
-        -- jwks_uri = "${KEYCLOAK_INTERNAL_ENDPOINT}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs",
         jwks_uri = string.format("%s/realms/%s/protocol/openid-connect/certs",KEYCLOAK_INTERNAL_ENDPOINT,KEYCLOAK_REALM),
-        -- userinfo_endpoint = "${KEYCLOAK_INTERNAL_ENDPOINT}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/userinfo",
         userinfo_endpoint = string.format("%s/realms/%s/protocol/openid-connect/userinfo",KEYCLOAK_INTERNAL_ENDPOINT,KEYCLOAK_REALM),
-        -- revocation_endpoint = "${KEYCLOAK_INTERNAL_ENDPOINT}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/revoke",
         revocation_endpoint = string.format("%s/realms/%s/protocol/openid-connect/revoke",KEYCLOAK_INTERNAL_ENDPOINT,KEYCLOAK_REALM),
-        -- end_session_endpoint = "${KEYCLOAK_EXTERNAL_ENDPOINT}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/logout",
         end_session_endpoint = string.format("%s/realms/%s/protocol/openid-connect/logout",KEYCLOAK_EXTERNAL_ENDPOINT,KEYCLOAK_REALM),
-        -- introspection_endpoint = "${KEYCLOAK_INTERNAL_ENDPOINT}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/token/introspect",
         introspection_endpoint = string.format("%s/realms/%s/protocol/openid-connect/token/introspect",KEYCLOAK_INTERNAL_ENDPOINT,KEYCLOAK_REALM),
     },            
     client_id = KEYCLOAK_CLIENT,
     token_endpoint_auth_method = "client_secret_basic", 
     client_secret = KEYCLOAK_SECRET,
     logout_path = "/logout",
-    -- redirect_after_logout_uri = "${KEYCLOAK_EXTERNAL_ENDPOINT}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/logout?redirect_uri=${KEYCLOAK_LOGOUT_REDIRECT_URI}",
-    redirect_after_logout_uri = string.format("%s/realms/%s/protocol/openid-connect/logout?redirect_uri=%s",KEYCLOAK_EXTERNAL_ENDPOINT,KEYCLOAK_REALM,KEYCLOAK_LOGOUT_REDIRECT_URI),
+    -- disable redirect_after_logout_uri will go to end_session_endpoint, 
+    -- otherwise it will go to redirect_after_logout_uri
+    -- redirect_after_logout_uri = KEYCLOAK_LOGOUT_REDIRECT_URI,
     redirect_after_logout_with_id_token_hint = false,
     scope = "openid",
     session_contents = {id_token=true, access_token=true},
