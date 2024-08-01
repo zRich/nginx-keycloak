@@ -85,3 +85,5 @@ end
 
 local cjson = require("cjson")
 ngx.req.set_header("X-USER", cjson.encode(res))
+-- make the user available to the backend
+ngx.req.set_header("Comfy-User", res.id_token.preferred_username)
